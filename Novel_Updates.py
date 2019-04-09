@@ -4,19 +4,18 @@ from selenium import webdriver
 import requests
 from bs4 import BeautifulSoup as bs
 from time import sleep
+import os, sys
 
 
 def site_login():
     url = "https://www.novelupdates.com/login/"
-    username = "username"
-    password = "password"
     chrome.get(url)
-    sleep(1)
+    sleep(3)
     try:
         chrome.find_element_by_class_name("qc-cmp-button").click()
     except:
         pass
-    sleep(1)
+    sleep(2)
     chrome.find_element_by_id("user_login").send_keys(username)
     chrome.find_element_by_id("user_pass").send_keys(password)
     chrome.find_element_by_id("wp-submit").click()
@@ -71,17 +70,20 @@ def edit(url, input_chap):
             print(e)
 
 
-chromeOptions = webdriver.ChromeOptions()
-prefs = {'profile.managed_default_content_settings.images': 2, 'disk-cache-size': 4096}
-chromeOptions.add_experimental_option("prefs", prefs)
+scriptname, username, password, *novel_name, chapter = tuple(sys.argv)
 
-with webdriver.Chrome(options=chromeOptions) as chrome:
-    site_login()
 
-    sleep(1)
+if scriptname == os.path.basename(__file__):
 
-    novel_name = input("Enter novel name: ")
-    chapter = input("Read until: ")
+    chromeOptions = webdriver.ChromeOptions()
+    prefs = {'profile.managed_default_content_settings.images': 2, 'disk-cache-size': 4096}
+    chromeOptions.add_experimental_option("prefs", prefs)
 
-    url = search_novel(novel_name)
-    edit(url, chapter)
+    with webdriver.Chrome(options=chromeOptions) as chrome:
+
+        site_login()
+        sleep(1)
+
+        novel_name = novel_name[0]
+        url = search_novel(novel_name)
+        edit(url, chapter)
