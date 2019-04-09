@@ -5,7 +5,7 @@ Update and edit novel status on NovelUpdates
 ## How To Use
 
 Open cmd in the directory where the file is saved and run this script:
-> python Novel_Updates.py username password "novel_name" chapter
+> python Novel_Updates.py username/email password "novel_name" chapter
 ```
     - novel_name should be in quotes to avoid wrong search
     - chapter is the chapter until where you've read the novel
