@@ -7,6 +7,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 import os
 import sys
+from time import sleep
 
 
 def site_login():
@@ -91,6 +92,7 @@ def edit_status(url, input_chap):
             if chap_no[1:] == input_chap:
                 chrome.execute_script("arguments[0].click();", check_conditions)
                 print("Chapter {} for {} found and checked".format(input_chap, novel_title))
+                sleep(3)
                 return
         except Exception as e:
             print(e)
