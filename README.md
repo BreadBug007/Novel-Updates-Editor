@@ -7,7 +7,7 @@ Update and edit novel status on NovelUpdates
 Open cmd in the directory where the file is saved and run this script:
 > python file_name.py username/email password "novel_name" chapter
 ```
-    - file_name eg. Novel_Updates_Status_Basic
+    - file_name eg. Novel_Updates_Edit_Status
     - novel_name should be in quotes to avoid wrong search
     - chapter is the chapter until where you've read the novel
 ```
@@ -19,5 +19,5 @@ Open cmd in the directory where the file is saved and run this script:
 - [x] Removed group based search in basic version, making the search based on the chapter number and finding that chapter in the novel directory(not gonna go into details lol).
 - [ ] Include novels whose chapters have format anything else than "c123", like "v1c2".
 - [ ] Add options to add/remove a novel to reading or other lists or other random tasks.
-- [ ] Include wait times.
+- [x] Include wait times.
 - [ ] A hell lot more
