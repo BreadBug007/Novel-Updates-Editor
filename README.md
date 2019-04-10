@@ -15,7 +15,7 @@ Open cmd in the directory where the file is saved and run this script:
 ## To-Do
 
 - [ ] ~~Make search group general, instead of just Wuxiaworld.~~
-- [ ] Removed group based search in basic version, making it search based on the chapter number and finding that chapter in the novel directory.
+- [x] Removed group based search in basic version, making the search based on the chapter number and finding that chapter in the novel directory(not gonna go into details lol).
 - [ ] Include novels whose chapters have format anything else than "c123", like "v1c2".
 - [ ] Add options to add/remove a novel to reading or other lists or other random tasks.
 - [ ] Include wait times.
