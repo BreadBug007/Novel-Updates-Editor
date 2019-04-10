@@ -41,7 +41,7 @@ def check_page(url, input_chap):
     soup = bs(source.content, 'lxml')
     pages = soup.find_all('a', class_="chp-release")
     for page in pages:
-        if page.text[1:] == input_chap:
+        if int(page.text[1:]) == input_chap:
             return True
     return False
 
