@@ -23,12 +23,12 @@ def site_login():
 
 
 def find_page(url, first_chap, input_chap):
-    first_chap = int(first_chap[1:])
+    first_chap = int(first_chap)
     input_chap = int(input_chap)
     if input_chap > first_chap:
         print("Chapter not released yet")
         return
-    page = int((first_chap - input_chap) / 15) + 1
+    page = int((first_chap - input_chap)/15) + 1
     last_page = get_last_page(url)
     page_range = [i for i in range(page, last_page + 1)]
     for page in page_range:
@@ -52,8 +52,9 @@ def search_novel(search_term):
     url = "https://www.novelupdates.com/?s={}&post_type=seriesplans".format(search_term)
     chrome.get(url)
     wait = WebDriverWait(chrome, 5)
-    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,"span.w-blog-entry-title-h.entry-title"))).click()
-    return chrome.current_url
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
+                                               "span.w-blog-entry-title-h.entry-title"))).click()
+    return chrome.current_url, chrome.page_source
 
 
 def get_last_page(url):
@@ -66,11 +67,20 @@ def get_last_page(url):
     return last_page
 
 
-def edit_status(url, input_chap):
-    with requests.Session() as s:
-        source = s.get(url)
-    soup = bs(source.text, 'lxml')
-    first_chap = soup.find('a', class_='chp-release').text
+def find_first_chap(url, source):
+    soup = bs(source, 'lxml')
+    chap_list = soup.find_all('a', class_="chp-release")
+    for chap in chap_list:
+        try:
+            if int(chap.text[1:]):
+                return int(chap.text[1:])
+        except ValueError:
+            pass
+
+
+def edit_status(url, source, input_chap):
+    soup = bs(source, 'lxml')
+    first_chap = find_first_chap(url, source)
     search_page = find_page(url, first_chap, input_chap)
     novel_title = soup.find('div', class_="seriestitlenu").text
 
@@ -84,15 +94,15 @@ def edit_status(url, input_chap):
     table = WebDriverWait(chrome, 2).until(EC.presence_of_element_located((By.CSS_SELECTOR, "#myTable")))
     chapters = table.find_elements_by_xpath('.//tr')
 
-    for chapter in chapters[1:]:
+    for chap in chapters[1:]:
         try:
-            check_conditions = chapter.find_element_by_css_selector("label.enableread")
-            chap_no = chapter.find_element_by_class_name("chp-release").text
+            check_conditions = chap.find_element_by_css_selector("label.enableread")
+            chap_no = chap.find_element_by_class_name("chp-release").text
 
             if chap_no[1:] == input_chap:
                 chrome.execute_script("arguments[0].click();", check_conditions)
-                print("Chapter {} of {} found and checked".format(input_chap, novel_title))
-                sleep(3)
+                print("Chapter {} for {} found and checked".format(input_chap, novel_title))
+                sleep(2)
                 return
         except Exception as e:
             print(e)
@@ -110,7 +120,7 @@ if scriptname == os.path.basename(__file__):
 
         site_login()
         novel_name = novel_name[0]
-        url = search_novel(novel_name)
-        edit_status(url, chapter)
+        url, source = search_novel(novel_name)
+        edit_status(url, source, chapter)
 
 
